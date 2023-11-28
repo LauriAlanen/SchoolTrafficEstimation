@@ -6,24 +6,33 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 def wait_element(driver, search_type, search_str):
-    element = WebDriverWait(driver, 5).until(
-        EC.presence_of_element_located((search_type, search_str))
-    )
-    return element
+    try:
+        element = WebDriverWait(driver, 2).until(
+            EC.presence_of_element_located((search_type, search_str))
+        )
+        return element
+    
+    except TimeoutException:
+        print("Unable to locate element")
+        return TimeoutException;
 
 
 def wait_elements(driver, search_type, search_str):
-    elements = WebDriverWait(driver, 5).until(
-        EC.presence_of_all_elements_located((search_type, search_str))
-    )
-    return elements
+    try:
+        elements = WebDriverWait(driver, 2).until(
+            EC.presence_of_all_elements_located((search_type, search_str))
+        )
+        return elements
+
+    except TimeoutException:
+        print("Unable to locate elements")
+        return TimeoutException;
 
 
 def select_groups(driver):
     available_groups = wait_elements(driver, By.CLASS_NAME, "search-result-row")
-        
-    print(available_groups)
-    if (len(available_groups) == 0):
+    
+    if (available_groups == TimeoutException):
         return 1
     
     for group in available_groups:
@@ -53,7 +62,7 @@ def website_controller(driver, study_sector):
 def create_driver(url):
     options = ChromeOptions()
     options.accept_insecure_certs = True
-    #options.add_argument("--headless") #enabled if you want to run without gui
+    options.add_argument("--headless") #enabled if you want to run without gui
 
     driver = webdriver.Chrome(options=options)
     driver.get(url)

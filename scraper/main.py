@@ -14,9 +14,10 @@ def main():
     
     else:
         php_session_id = restaurantScraper.get_php_session_id(driver)
-        response = calendarRequest.get_calendar_with_cookie(php_session_id)
-        fileOperations.saveSchedule(response.text, "schedules/test.csv")
-        print(fileOperations.readSchedule("schedules/test.csv"))
-        
+        schedule = calendarRequest.get_calendar_with_cookie(php_session_id).text
+
+        fileOperations.saveSchedule(schedule, "schedules/test.csv")
+        df_schedule = fileOperations.readSchedule("schedules/test.csv")
+        print(df_schedule)        
 if __name__ == '__main__':
     main()
