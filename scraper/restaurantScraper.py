@@ -22,15 +22,20 @@ def wait_elements(driver, search_type, search_str):
 def select_groups(driver):
     available_groups = wait_elements(driver, By.CLASS_NAME, "search-result-row")
         
+    print(available_groups)
+    if (len(available_groups) == 0):
+        return 1
+    
     for group in available_groups:
         group_name = wait_element(group, By.CLASS_NAME, "code")
         reserved_classes = wait_element(group, By.CLASS_NAME, "credits")
         total_classes = reserved_classes.text.split()[0]
 
-        if (int(total_classes) > 0):
+        if (int(total_classes) > 50):
             button = wait_element(group, By.CLASS_NAME, "btn")
             button.click()
 
+    return 0
 
 def website_controller(driver, study_sector):
     try:
@@ -48,6 +53,7 @@ def website_controller(driver, study_sector):
 def create_driver(url):
     options = ChromeOptions()
     options.accept_insecure_certs = True
+    #options.add_argument("--headless") #enabled if you want to run without gui
 
     driver = webdriver.Chrome(options=options)
     driver.get(url)
