@@ -1,8 +1,5 @@
 from selenium import webdriver
-from time import sleep
-from typing import List
 from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
@@ -48,17 +45,20 @@ def website_controller(driver, study_sector):
         exit(TimeoutException)
 
 
-def main():
-    url = 'https://lukkarit.vamk.fi/#/schedule'
-
+def create_driver(url):
     options = ChromeOptions()
     options.accept_insecure_certs = True
 
     driver = webdriver.Chrome(options=options)
     driver.get(url)
 
-    website_controller(driver, "LT2022")
-    select_groups(driver)
+    return driver
 
-if __name__ == '__main__':
-    main()
+def get_php_session_id(driver):
+    cookies = driver.get_cookies()
+    return cookies[0]["value"]
+
+
+
+
+    
