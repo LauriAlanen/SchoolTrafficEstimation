@@ -40,7 +40,7 @@ def select_groups(driver):
         reserved_classes = wait_element(group, By.CLASS_NAME, "credits")
         total_classes = reserved_classes.text.split()[0]
 
-        if (int(total_classes) > 50):
+        if (int(total_classes) > 10):
             button = wait_element(group, By.CLASS_NAME, "btn")
             button.click()
 

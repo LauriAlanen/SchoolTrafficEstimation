@@ -5,7 +5,7 @@ import fileOperations
 def main():
     url = 'https://lukkarit.vamk.fi/#/schedule'
 
-    for sub_class in fileOperations.getNextClass():
+    for class_name, sub_class in fileOperations.getNextClass():
         driver = restaurantScraper.create_driver(url)
 
         restaurantScraper.website_controller(driver, sub_class)
@@ -17,9 +17,10 @@ def main():
         else:
             php_session_id = restaurantScraper.get_php_session_id(driver)
             schedule = calendarRequest.get_calendar_with_cookie(php_session_id).text
-        
-            fileOperations.saveSchedule(schedule, f"schedules/{sub_class}.csv")
-            df_schedule = fileOperations.readSchedule(f"schedules/{sub_class}.csv")
+            filtered_schedule = fileOperations.filterDataFrame(schedule)
+
+            fileOperations.saveSchedule(filtered_schedule, f"schedules/{class_name}/{sub_class}.csv")
+            df_schedule = fileOperations.readSchedule(f"schedules/{class_name}/{sub_class}.csv")
             occurances = fileOperations.getOccurance(df_schedule)
             print(occurances)
         
