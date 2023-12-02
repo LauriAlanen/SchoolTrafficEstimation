@@ -14,6 +14,7 @@ def save_calendar(schedule, path):
     
     with open(path, "wb") as f:
         schedule.to_csv(f)
+        print("Succesfully saved schedule!")
 
 
 def read_calendar(path):

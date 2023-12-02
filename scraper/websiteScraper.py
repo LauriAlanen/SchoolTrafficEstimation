@@ -19,9 +19,8 @@ def wait_element(driver, search_type, search_str):
         except (TimeoutException, StaleElementReferenceException):
             print("Unable to locate element, retrying...")
 
-            if(attempt == MAX_RETRIES):
-                print(f"Tried {MAX_RETRIES}, but unable to locate element")
-                raise 
+            if(attempt == MAX_RETRIES - 1):
+                print(f"Tried {MAX_RETRIES} times, but still unable to locate element")
 
 def wait_elements(driver, search_type, search_str):
     for attempt in range(MAX_RETRIES):
@@ -33,11 +32,10 @@ def wait_elements(driver, search_type, search_str):
             return elements
         
         except (TimeoutException, StaleElementReferenceException):
-            print("Unable to locate element, retrying...")  
+            print("Unable to locate elements, retrying...")  
 
-            if(attempt == MAX_RETRIES):
-                print(f"Tried {MAX_RETRIES}, but unable to locate elements")
-                raise
+            if(attempt == MAX_RETRIES - 1):
+                print(f"Tried {MAX_RETRIES} times, but still unable to locate elements")
 
 # Tässä on bugi
 def select_available_groups(driver, sub_class):
@@ -58,7 +56,6 @@ def select_available_groups(driver, sub_class):
                 button.click()
         
         except (StaleElementReferenceException, AttributeError):
-            print("Unable to locate element trying again...")
             available_groups = wait_element(driver, By.CLASS_NAME, "search-result-row")
             continue
 

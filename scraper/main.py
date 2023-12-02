@@ -14,6 +14,7 @@ def main():
 
     with alive_bar(total_class_count) as bar:
         for class_name, sub_class in current_class:
+            print(f"Gathering {sub_class} information")
             driver = websiteScraper.create_driver(url_to_scrape)
             
             websiteScraper.search_groups(driver, sub_class)
@@ -29,12 +30,12 @@ def main():
                 occurances = dataOperations.get_occurance_count(df_schedule)
 
             #print(f"\n{occurances}\n")
-
+            print("")
             bar()
             driver.refresh()
     
     driver.quit()
-    print("All class calendars successfully scraped!")
+    print("All calendars successfully scraped!")
         
 if __name__ == '__main__':
     main()

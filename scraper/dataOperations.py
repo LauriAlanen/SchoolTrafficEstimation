@@ -16,26 +16,35 @@ def get_occurance_count(df):
     return count
 
 
-def filter_calendar(schedule):
-    filters = ["start_date", "event_id", "code", "visible", "color", "subject", 
-             "description", "reserved_for", "location", "realizations"]
-
+def json_to_df(schedule):
     try:
         df = pd.read_json(StringIO(schedule))
-        print(f"\n{df}\n")
-        for filter_to_try in filters:
-            try:
-                df.drop(filter_to_try ,axis=1, inplace=True)
-            except KeyError:
-                print(f"Could not filter with {filter_to_try}")
+        #print(f"\n{df}\n")
 
-        return df
-        
     except ValueError:
         print(f"Unable to convert schedule to dataframe")
         return None
-        
     
+    return df
+
+
+def filter_calendar(schedule):
+    filters = ["start_date", "event_id", "code", "visible", "color", "subject", 
+             "description", "reserved_for", "location", "realizations"]
+    
+    df = json_to_df(schedule)
+    #print(f"\n{df}\n")
+
+    if df is not None:
+        for filter_to_try in filters:
+            try:
+                df.drop(filter_to_try ,axis=1, inplace=True)
+
+            except KeyError:
+                print(f"Could not filter with {filter_to_try}")
+
+    return df
+        
 
 def get_next_class(class_file_path):
     classes = get_all_classes(class_file_path)
@@ -43,6 +52,7 @@ def get_next_class(class_file_path):
     for class_name, class_list in classes.items():
         for sub_class in class_list:
             yield (class_name, sub_class)
+
 
 def get_amount_of_classes(class_file_path):
     all_classes = get_all_classes(class_file_path)

@@ -11,10 +11,10 @@ def get_calendar_cookie(php_session_id):
     }
 
     data = {
-        "dateFrom": "2023-11-27",
-        "dateTo": "2023-12-01",
+        "dateFrom": "2023-12-02",
+        "dateTo": "2023-12-11",
         "eventType": "visible"
     }
 
     response = requests.post(url, headers=headers, json=data, verify=False)
-    return response
+    return response 
