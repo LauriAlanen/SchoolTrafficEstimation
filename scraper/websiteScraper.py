@@ -6,7 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 MAX_RETRIES = 3
-WAIT_TIMEOUT = 10
+WAIT_TIMEOUT = 3
 
 def wait_element(driver, search_type, search_str):
     for attempt in range(MAX_RETRIES):
@@ -20,7 +20,7 @@ def wait_element(driver, search_type, search_str):
             print("Unable to locate element, retrying...")
 
             if(attempt == MAX_RETRIES):
-                print(F"Tried {MAX_RETRIES}, but unable to locate element")
+                print(f"Tried {MAX_RETRIES}, but unable to locate element")
                 raise 
 
 def wait_elements(driver, search_type, search_str):
@@ -36,16 +36,17 @@ def wait_elements(driver, search_type, search_str):
             print("Unable to locate element, retrying...")  
 
             if(attempt == MAX_RETRIES):
-                print(F"Tried {MAX_RETRIES}, but unable to locate elements")
+                print(f"Tried {MAX_RETRIES}, but unable to locate elements")
                 raise
 
 # Tässä on bugi
-def select_available_groups(driver):
+def select_available_groups(driver, sub_class):
     available_groups = wait_elements(driver, By.CLASS_NAME, "search-result-row")
     
     if not available_groups:
-        return 1
-    
+        print(f"Failed to locate any group with name {sub_class}, skipping...")
+        return Exception
+
     for group in available_groups:
         try:
             #group_name = wait_element(group, By.CLASS_NAME, "code")

@@ -2,11 +2,12 @@ import pandas as pd
 import pyarrow.feather as feather
 import os
 
-def saveSchedule(schedule, path):
+def save_calendar(schedule, path):
     folder_path = os.path.dirname(path)
 
     try:
         os.makedirs(folder_path)
+        print(f"Created folder with path {folder_path}")
     
     except FileExistsError:
         print(f"Folder with path {folder_path} already exists")
@@ -15,7 +16,7 @@ def saveSchedule(schedule, path):
         schedule.to_csv(f)
 
 
-def readSchedule(path):
+def read_calendar(path):
     with open(path, "rb") as f:
         print(f"Reading schedule {path}")
 

@@ -3,7 +3,7 @@ from urllib3.exceptions import InsecureRequestWarning
 
 requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
 
-def get_calendar_with_cookie(php_session_id):
+def get_calendar_cookie(php_session_id):
     url = "https://lukkarit.vamk.fi/rest/basket/0/events"
 
     headers = {
