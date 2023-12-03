@@ -1,6 +1,8 @@
 import pandas as pd
 import pyarrow.feather as feather
 import os
+from io import StringIO
+
 
 def save_df_to_file(df_to_save, path):
     folder_path = os.path.dirname(path)
@@ -28,3 +30,14 @@ def create_folder_path(folder_path):
 
     except FileExistsError:
         print(f"Folder with path {folder_path} already exists")
+
+def json_to_df(calendar):
+    try:
+        calendar_df = pd.read_json(StringIO(calendar))
+        #print(f"\n{df}\n")
+
+    except ValueError:
+        print(f"Unable to convert schedule to dataframe")
+        return None
+    
+    return calendar_df
