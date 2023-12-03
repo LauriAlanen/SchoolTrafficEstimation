@@ -13,9 +13,9 @@ def save_df_to_file(df_to_save, path):
         print("Succesfully saved schedule!")
 
 
-def read_df_from_file(path):
+def read_df_from_file(path, silent):
     with open(path, "rb") as f:
-        print(f"Reading schedule {path}")
+        if not silent : print(f"Reading schedule {path}")
 
         df_to_read = pd.read_csv(f)
         #read_df = feather.read_feather(f)

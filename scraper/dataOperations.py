@@ -12,25 +12,13 @@ def get_all_classes(class_file_path):
         return classes_json
 
 
-def get_occurrence_count(calendar_df):
+def get_date_counts(calendar_df):
     sorted_df = calendar_df.sort_values(by=['end_date'])
     count = sorted_df['end_date'].value_counts()
     count_df = count.to_frame().reset_index()
     count_df = count_df.fillna(0)
 
     return count_df
-
-
-def build_total_occurrences(calendar_df, total_occurrences_df):
-    current_occurrences_df = get_occurrence_count(calendar_df)
-
-    if total_occurrences_df.empty:
-        return current_occurrences_df
-
-    else:
-        total_occurrences_df = pd.concat([total_occurrences_df, current_occurrences_df]).groupby(['end_date']).sum().reset_index()
-        return total_occurrences_df
-
 
 def filter_calendar(calendar):
     filters = ["start_date", "event_id", "code", "visible", "color", "subject", 
@@ -78,34 +66,45 @@ def gather_and_filter_calendar_information(driver, sub_class, date_from, date_to
     return filtered_calendar
 
 
+def build_total_traffic_df(calendar_df, total_traffic_df):
+    current_occurrences_df = get_date_counts(calendar_df)
+
+    if total_traffic_df.empty:
+        return current_occurrences_df
+
+    else:
+        total_traffic_df = pd.concat([total_traffic_df, current_occurrences_df]).groupby(['end_date']).sum().reset_index()
+        return total_traffic_df
+
+
 def get_traffic_df(path_to_count_file, path_to_all_classes_file):
     try:
-        classes_count_df = fileOperations.read_df_from_file(path_to_count_file)
-        classes_df = pd.DataFrame(columns=[item for item in classes_count_df["end_date"]])
+        classes_count_df = fileOperations.read_df_from_file(path_to_count_file, True)
+        traffic_df = pd.DataFrame(columns=[item for item in classes_count_df["end_date"]])
 
         current_class = get_next_class(path_to_all_classes_file)
-        for index, (class_list, class_name, sub_class) in enumerate(current_class):
-            class_df = fileOperations.read_df_from_file(f"calendars/{class_name}/{sub_class}.csv")
-            for date in classes_df:
-                date_compare(classes_df, class_df, date, index, sub_class)
+        for index, (class_info_list, class_name, sub_class) in enumerate(current_class):
+            class_df = fileOperations.read_df_from_file(f"calendars/{class_name}/{sub_class}.csv", True)
+            for date in traffic_df:
+                date_compare(traffic_df, class_df, date, index, sub_class)
 
-        classes_df = classes_df.fillna(0)
-        return classes_df
+        traffic_df = traffic_df.fillna(0)
+        return traffic_df
         
     except FileNotFoundError:
         print(f"Cant locate file with path {path_to_count_file}... Unable to create traffic dataframe.")
         return None
     
 
-def date_compare(classes_df, class_df, date_to_compare, index, sub_class):
+def date_compare(traffic_df, class_df, date_to_compare, index, sub_class):
     for date_to_check in class_df["end_date"]:
         if date_to_compare == date_to_check:
-            classes_df.loc[index, date_to_compare] = sub_class    
+            traffic_df.loc[index, date_to_compare] = sub_class    
 
 
-def get_traffic_by_date(classes_df, date):
+def get_traffic_by_date(traffic_df, date):
     try:
-        filtered_df = classes_df[classes_df[date] != 0]
+        filtered_df = traffic_df[traffic_df[date] != 0]
         filtered_df = filtered_df[date] 
         filtered_df = filtered_df.reset_index(drop=True)
         return filtered_df
@@ -114,5 +113,3 @@ def get_traffic_by_date(classes_df, date):
         print(f"Cant find any groups with date {date}")
         return None
 
-traffic_df = get_traffic_df("results/predictions/2023-12-08_to_2023-12-15.csv", "calendars/all_classes.json") 
-print(get_traffic_by_date(traffic_df, "2023-12-08 16:15"))
