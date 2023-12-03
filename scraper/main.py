@@ -32,36 +32,30 @@ def main():
         "Juvenes Serveri" : 0
     }
 
-    with alive_bar(total_class_count) as bar:
-        for class_info_list, class_name, sub_class in current_class:
-            driver = ws.create_driver(url_to_scrape)
-            filtered_calendar = do.gather_and_filter_calendar_information(driver, sub_class, date_from, date_to)
-
-            if(filtered_calendar is not None):
-                fo.save_df_to_file(filtered_calendar, f"calendars/{class_name}/{sub_class}.csv")
-                calendar_df = fo.read_df_from_file(f"calendars/{class_name}/{sub_class}.csv", silent=False)
-                total_traffic_df = do.build_total_traffic_df(calendar_df, total_traffic_df)
-
-            print("")
-            bar()
-            driver.refresh()
-    
-    print("All calendars successfully scraped!")
-    fo.save_df_to_file(total_traffic_df, f"results/traffic/{date_from}_to_{date_to}.csv")
+    #with alive_bar(total_class_count) as bar:
+    #    for class_info_list, class_name, sub_class in current_class:
+    #        driver = ws.create_driver(url_to_scrape)
+    #        filtered_calendar = do.gather_and_filter_calendar_information(driver, sub_class, date_from, date_to)
+#
+    #        if(filtered_calendar is not None):
+    #            fo.save_df_to_file(filtered_calendar, f"calendars/{class_name}/{sub_class}.csv")
+    #            calendar_df = fo.read_df_from_file(f"calendars/{class_name}/{sub_class}.csv", silent=False)
+    #            total_traffic_df = do.build_total_traffic_df(calendar_df, total_traffic_df)
+#
+    #        print("")
+    #        bar()
+    #        driver.refresh()
+    #
+    #print("All calendars successfully scraped!")
+    #fo.save_df_to_file(total_traffic_df, f"results/traffic/{date_from}_to_{date_to}.csv")
 
     total_traffic_df = do.get_traffic_df(f"results/traffic/{date_from}_to_{date_to}.csv", all_classes_df)
-    traffic_at_date = do.get_traffic_by_date(total_traffic_df, "2023-12-13 10:00")
-    if traffic_at_date is not None:
-        for sub_class in traffic_at_date:
-            traffic_distribution = do.get_traffic_distribution(all_classes_df, sub_class)
-            amount_of_people = do.get_amount_of_people_in_class(all_classes_df, sub_class)
-            class_restaurant_distribution = do.distribute_to_restaurants(amount_of_people, traffic_distribution)
-            total_restaurant_distribution = do.add_distributions_to_total(total_restaurant_distribution, class_restaurant_distribution)
-    
-    
-    restaurants = do.connect_distribution_to_restaurant(total_restaurant_distribution, restaurants)
-    print(restaurants)
-    driver.quit()
+    for date in total_traffic_df:
+        total_restaurant_distribution = do.get_restaurant_traffic(all_classes_df, total_traffic_df, total_restaurant_distribution, date)
+        restaurants = do.connect_distribution_to_restaurant(total_restaurant_distribution, restaurants)
+        print(f"At date {date} restaurants are distributed {restaurants}")
+        total_restaurant_distribution = [0, 0, 0, 0, 0, 0, 0, 0]
+    #driver.quit()
 
 
 if __name__ == '__main__':

@@ -149,7 +149,6 @@ def get_class_name_from_subclass(sub_class):
 
 def add_distributions_to_total(total_distribution, class_distribution):
     res = []
-
     for i in range(len(total_distribution)):
         res.append(total_distribution[i] + class_distribution[i])
     
@@ -160,3 +159,15 @@ def connect_distribution_to_restaurant(total_distribution, restaurants):
         restaurants[key] = total_distribution[index]
 
     return restaurants
+
+def get_restaurant_traffic(all_classes_df, total_traffic_df, total_restaurant_distribution, date):
+    traffic_at_date = get_traffic_by_date(total_traffic_df, date)
+
+    if traffic_at_date is not None:
+        for sub_class in traffic_at_date:
+            traffic_distribution = get_traffic_distribution(all_classes_df, sub_class)
+            amount_of_people = get_amount_of_people_in_class(all_classes_df, sub_class)
+            class_restaurant_distribution = distribute_to_restaurants(amount_of_people, traffic_distribution)
+            total_restaurant_distribution = add_distributions_to_total(total_restaurant_distribution, class_restaurant_distribution)
+    
+    return total_restaurant_distribution
