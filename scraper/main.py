@@ -19,6 +19,7 @@ def main():
     current_class = do.get_next_class(all_classes_df)
 
     total_traffic_df = pd.DataFrame(columns=['end_date'])
+    total_restaurant_distribution = [0, 0, 0, 0, 0, 0, 0, 0]
 
     restaurants = {
         "Cotton Club" : 0,
@@ -49,7 +50,17 @@ def main():
     fo.save_df_to_file(total_traffic_df, f"results/traffic/{date_from}_to_{date_to}.csv")
 
     total_traffic_df = do.get_traffic_df(f"results/traffic/{date_from}_to_{date_to}.csv", all_classes_df)
-    traffic_at_date = do.get_traffic_by_date(total_traffic_df, "2023-12-08 16:15")
+    traffic_at_date = do.get_traffic_by_date(total_traffic_df, "2023-12-13 10:00")
+    if traffic_at_date is not None:
+        for sub_class in traffic_at_date:
+            traffic_distribution = do.get_traffic_distribution(all_classes_df, sub_class)
+            amount_of_people = do.get_amount_of_people_in_class(all_classes_df, sub_class)
+            class_restaurant_distribution = do.distribute_to_restaurants(amount_of_people, traffic_distribution)
+            total_restaurant_distribution = do.add_distributions_to_total(total_restaurant_distribution, class_restaurant_distribution)
+    
+    
+    restaurants = do.connect_distribution_to_restaurant(total_restaurant_distribution, restaurants)
+    print(restaurants)
     driver.quit()
 
 

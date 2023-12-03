@@ -31,12 +31,7 @@ def use_prophet(path_to_total_occurrences):
     plt.show()
 
 
-def distribute_to_restaurants(amount_of_people, restaurant_distribution):
-    distributed_people = list()
-    for distibution_multiplier in restaurant_distribution:
-        distributed_people.append(round(amount_of_people * distibution_multiplier))
 
-    print(distributed_people)
-    return distributed_people
+
 
     

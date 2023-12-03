@@ -1,9 +1,13 @@
 import pandas as pd
+import re
 import json
 import websiteScraper
 import calendarRequest
 import websiteScraper
 import fileOperations
+
+
+
 
 def get_all_classes(class_file_path):
     with open(class_file_path, "rb") as f:
@@ -110,5 +114,49 @@ def get_traffic_by_date(traffic_df, date):
         print(f"Warning - Cant find any groups with date {date}")
         return None
 
-def get_amount_of_people_in_class(all_classes_df, class_name):
-    print(all_classes_df)
+def get_amount_of_people_in_class(all_classes_df, sub_class):
+    try:
+        class_name = get_class_name_from_subclass(sub_class)
+        amount_of_people = all_classes_df[class_name[0]][sub_class]["people"]
+        return amount_of_people
+    
+    except KeyError:
+        print(f"Warning - Unable to get amount of people with class name : {class_name[0]} and sub class : {sub_class}")
+        return None
+    
+def get_traffic_distribution(all_classes_df, sub_class):
+    try:
+        class_name = get_class_name_from_subclass(sub_class)
+        restaurant_distribution = all_classes_df[class_name[0]][sub_class]["restaurants"]
+        return restaurant_distribution
+    
+    except KeyError:
+        print(f"Warning - Unable to get restaurant distribution with class name : {class_name[0]} and sub class : {sub_class}")
+        return None
+    
+def distribute_to_restaurants(amount_of_people, restaurant_distribution):
+    distributed_people =  []
+
+    for distibution_multiplier in restaurant_distribution:
+        distributed_people.append(round(amount_of_people * distibution_multiplier))
+        
+    return distributed_people
+
+
+def get_class_name_from_subclass(sub_class):
+    return re.split(r'(\d+)',sub_class)
+
+
+def add_distributions_to_total(total_distribution, class_distribution):
+    res = []
+
+    for i in range(len(total_distribution)):
+        res.append(total_distribution[i] + class_distribution[i])
+    
+    return res
+
+def connect_distribution_to_restaurant(total_distribution, restaurants):
+    for index, key in enumerate(restaurants):
+        restaurants[key] = total_distribution[index]
+
+    return restaurants
