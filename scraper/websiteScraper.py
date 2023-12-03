@@ -1,3 +1,4 @@
+from time import sleep
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options as ChromeOptions
@@ -17,10 +18,11 @@ def wait_element(driver, search_type, search_str):
             return element
         
         except (TimeoutException, StaleElementReferenceException):
-            print("Unable to locate element, retrying...")
+            print("Warning - Unable to locate element, retrying...")
+            sleep(1)
 
             if(attempt == MAX_RETRIES - 1):
-                print(f"Tried {MAX_RETRIES} times, but still unable to locate element")
+                print(f"Warning - Tried {MAX_RETRIES} times, but still unable to locate element")
 
 def wait_elements(driver, search_type, search_str):
     for attempt in range(MAX_RETRIES):
@@ -32,17 +34,18 @@ def wait_elements(driver, search_type, search_str):
             return elements
         
         except (TimeoutException, StaleElementReferenceException):
-            print("Unable to locate elements, retrying...")  
+            print("Warning - Unable to locate elements, retrying...")  
+            sleep(1)
 
             if(attempt == MAX_RETRIES - 1):
-                print(f"Tried {MAX_RETRIES} times, but still unable to locate elements")
+                print(f"Warning - Tried {MAX_RETRIES} times, but still unable to locate elements")
 
 # Tässä on bugi
 def select_available_groups(driver, sub_class):
     available_groups = wait_elements(driver, By.CLASS_NAME, "search-result-row")
     
     if not available_groups:
-        print(f"Failed to locate any group with name {sub_class}, skipping...")
+        print(f"Warning - Failed to locate any group with name {sub_class}, skipping...")
         return Exception
 
     for group in available_groups:
@@ -70,7 +73,7 @@ def search_groups(driver, study_sector):
         select_group_search.click()
         
     except TimeoutException:
-        print("Cant locate elements")
+        print("Warning - Cant locate elements")
         exit(TimeoutException)
 
 

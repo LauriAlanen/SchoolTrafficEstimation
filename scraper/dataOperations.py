@@ -32,28 +32,25 @@ def filter_calendar(calendar):
                 calendar_df.drop(filter_to_try ,axis=1, inplace=True)
 
             except KeyError:
-                print(f"Could not filter with {filter_to_try}")
+                print(f"Warning - Could not filter with {filter_to_try}")
 
     return calendar_df
         
 
-def get_next_class(class_file_path):
-    classes = get_all_classes(class_file_path)
-
-    for class_name, class_list in classes.items():
+def get_next_class(all_classes_df):
+    for (class_name, class_list) in all_classes_df.items():
         for sub_class in class_list:
             yield (class_list, class_name, sub_class)
 
 
-def get_amount_of_classes(class_file_path):
-    all_classes = get_all_classes(class_file_path)
-    total_classes = sum(len(class_list) for class_list in all_classes.values())
+def get_amount_of_classes(all_classes_df):
+    total_classes = sum(len(class_list) for class_list in all_classes_df.values())
     
     return total_classes
 
 
 def gather_and_filter_calendar_information(driver, sub_class, date_from, date_to):
-    print(f"Gathering {sub_class} information")
+    print(f"Notification - Gathering {sub_class} information")
     
     websiteScraper.search_groups(driver, sub_class)
     websiteScraper.select_available_groups(driver, sub_class)
@@ -77,12 +74,12 @@ def build_total_traffic_df(calendar_df, total_traffic_df):
         return total_traffic_df
 
 
-def get_traffic_df(path_to_count_file, path_to_all_classes_file):
+def get_traffic_df(path_to_count_file, all_classes_df):
     try:
         classes_count_df = fileOperations.read_df_from_file(path_to_count_file, True)
         traffic_df = pd.DataFrame(columns=[item for item in classes_count_df["end_date"]])
 
-        current_class = get_next_class(path_to_all_classes_file)
+        current_class = get_next_class(all_classes_df)
         for index, (class_info_list, class_name, sub_class) in enumerate(current_class):
             class_df = fileOperations.read_df_from_file(f"calendars/{class_name}/{sub_class}.csv", True)
             for date in traffic_df:
@@ -92,7 +89,7 @@ def get_traffic_df(path_to_count_file, path_to_all_classes_file):
         return traffic_df
         
     except FileNotFoundError:
-        print(f"Cant locate file with path {path_to_count_file}... Unable to create traffic dataframe.")
+        print(f"Warning - Cant locate file with path {path_to_count_file}... Unable to create traffic dataframe.")
         return None
     
 
@@ -101,7 +98,7 @@ def date_compare(traffic_df, class_df, date_to_compare, index, sub_class):
         if date_to_compare == date_to_check:
             traffic_df.loc[index, date_to_compare] = sub_class    
 
-
+    
 def get_traffic_by_date(traffic_df, date):
     try:
         filtered_df = traffic_df[traffic_df[date] != 0]
@@ -110,6 +107,8 @@ def get_traffic_by_date(traffic_df, date):
         return filtered_df
     
     except (KeyError, TypeError):
-        print(f"Cant find any groups with date {date}")
+        print(f"Warning - Cant find any groups with date {date}")
         return None
 
+def get_amount_of_people_in_class(all_classes_df, class_name):
+    print(all_classes_df)

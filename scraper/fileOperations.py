@@ -10,12 +10,12 @@ def save_df_to_file(df_to_save, path):
 
     with open(path, "wb") as f:
         df_to_save.to_csv(f)
-        print("Succesfully saved schedule!")
+        print("Notification - Succesfully saved schedule!")
 
 
 def read_df_from_file(path, silent):
     with open(path, "rb") as f:
-        if not silent : print(f"Reading schedule {path}")
+        if not silent : print(f"Notification - Reading schedule {path}")
 
         df_to_read = pd.read_csv(f)
         #read_df = feather.read_feather(f)
@@ -26,10 +26,10 @@ def read_df_from_file(path, silent):
 def create_folder_path(folder_path):
     try:
         os.makedirs(folder_path)
-        print(f"Created folder with path {folder_path}")
+        print(f"Notification - Created folder with path {folder_path}")
 
     except FileExistsError:
-        print(f"Folder with path {folder_path} already exists")
+        print(f"Notification - Folder with path {folder_path} already exists")
 
 def json_to_df(calendar):
     try:
@@ -37,7 +37,7 @@ def json_to_df(calendar):
         #print(f"\n{df}\n")
 
     except ValueError:
-        print(f"Unable to convert schedule to dataframe")
+        print(f"Warning - Unable to convert schedule to dataframe")
         return None
     
     return calendar_df
