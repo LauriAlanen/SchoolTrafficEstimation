@@ -6,9 +6,6 @@ import calendarRequest
 import websiteScraper
 import fileOperations
 
-
-
-
 def get_all_classes(class_file_path):
     with open(class_file_path, "rb") as f:
         classes_json = json.load(f)
@@ -87,7 +84,7 @@ def get_traffic_df(path_to_count_file, all_classes_df):
         for index, (class_info_list, class_name, sub_class) in enumerate(current_class):
             class_df = fileOperations.read_df_from_file(f"calendars/{class_name}/{sub_class}.csv", True)
             for date in traffic_df:
-                date_compare(traffic_df, class_df, date, index, sub_class)
+                date_compare_and_insert(traffic_df, class_df, date, index, sub_class)
 
         traffic_df = traffic_df.fillna(0)
         return traffic_df
@@ -97,10 +94,10 @@ def get_traffic_df(path_to_count_file, all_classes_df):
         return None
     
 
-def date_compare(traffic_df, class_df, date_to_compare, index, sub_class):
-    for date_to_check in class_df["end_date"]:
-        if date_to_compare == date_to_check:
-            traffic_df.loc[index, date_to_compare] = sub_class    
+def date_compare_and_insert(traffic_df, class_df, date_to_compare, index, sub_class):
+    for date in class_df["end_date"]:
+        if date_to_compare == date:
+            traffic_df.loc[index, date] = sub_class   
 
     
 def get_traffic_by_date(traffic_df, date):
@@ -114,6 +111,7 @@ def get_traffic_by_date(traffic_df, date):
         print(f"Warning - Cant find any groups with date {date}")
         return None
 
+
 def get_amount_of_people_in_class(all_classes_df, sub_class):
     try:
         class_name = get_class_name_from_subclass(sub_class)
@@ -124,6 +122,7 @@ def get_amount_of_people_in_class(all_classes_df, sub_class):
         print(f"Warning - Unable to get amount of people with class name : {class_name[0]} and sub class : {sub_class}")
         return None
     
+
 def get_traffic_distribution(all_classes_df, sub_class):
     try:
         class_name = get_class_name_from_subclass(sub_class)
@@ -134,6 +133,7 @@ def get_traffic_distribution(all_classes_df, sub_class):
         print(f"Warning - Unable to get restaurant distribution with class name : {class_name[0]} and sub class : {sub_class}")
         return None
     
+
 def distribute_to_restaurants(amount_of_people, restaurant_distribution):
     distributed_people =  []
 
@@ -154,11 +154,13 @@ def add_distributions_to_total(total_distribution, class_distribution):
     
     return res
 
+
 def connect_distribution_to_restaurant(total_distribution, restaurants):
     for index, key in enumerate(restaurants):
         restaurants[key] = total_distribution[index]
 
     return restaurants
+
 
 def get_restaurant_traffic(all_classes_df, total_traffic_df, total_restaurant_distribution, date):
     traffic_at_date = get_traffic_by_date(total_traffic_df, date)
@@ -171,3 +173,10 @@ def get_restaurant_traffic(all_classes_df, total_traffic_df, total_restaurant_di
             total_restaurant_distribution = add_distributions_to_total(total_restaurant_distribution, class_restaurant_distribution)
     
     return total_restaurant_distribution
+
+
+def get_traffic_at_date(all_classes_df, total_traffic_df, total_restaurant_distribution, date, restaurants):
+    total_restaurant_distribution = get_restaurant_traffic(all_classes_df, total_traffic_df, total_restaurant_distribution, date)
+    restaurants = connect_distribution_to_restaurant(total_restaurant_distribution, restaurants)
+
+    return restaurants

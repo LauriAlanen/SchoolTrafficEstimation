@@ -1,6 +1,7 @@
 import pandas as pd
 import pyarrow.feather as feather
 import os
+import json
 from io import StringIO
 
 
@@ -41,3 +42,14 @@ def json_to_df(calendar):
         return None
     
     return calendar_df
+
+def save_dict_as_json(path, dictionary_to_save):
+    folder_path = os.path.dirname(path)
+    create_folder_path(folder_path)
+
+    json_obj = json.dumps(dictionary_to_save, indent=4)
+    with open(path, "wb") as f:
+        f.write(json_obj)
+        print("Notification - Succesfully saved dictionary!")
+
+    
