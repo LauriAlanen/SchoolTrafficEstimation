@@ -1,7 +1,6 @@
 import fileOperations as fo
 import dataOperations as do
-import websiteScraper as ws
-import forecasting
+import websiteOperations as wo
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -11,29 +10,18 @@ from alive_progress import alive_bar
 def main():
     url_to_scrape = 'https://lukkarit.vamk.fi/#/schedule'
     class_file_path = 'calendars/all_classes.json'
+    all_classes_df = do.get_all_classes(class_file_path)
     date_from = "2024-02-10" # YYYY-MM-DD
     date_to = "2024-02-20" # YYYY-MM-DD
     
-    all_classes_df = do.get_all_classes(class_file_path)
     total_class_count = do.get_amount_of_classes(all_classes_df)
     current_class = do.get_next_class(all_classes_df)
 
     total_traffic_df = pd.DataFrame(columns=['end_date'])
 
-    restaurants = {
-        "Cotton Club" : 0,
-        "August Restaurant" : 0,
-        "Cafe Techno" : 0,
-        "Restaurant W33" : 0,
-        "Juvenes Mathilda" : 0,
-        "Juvenes Alma" : 0,
-        "Juvenes Alere" : 0,
-        "Juvenes Serveri" : 0
-    }
-
     with alive_bar(total_class_count) as bar:
         for class_info_list, class_name, sub_class in current_class:
-            driver = ws.create_driver(url_to_scrape)
+            driver = wo.create_driver(url_to_scrape)
             filtered_calendar = do.gather_and_filter_calendar_information(driver, sub_class, date_from, date_to)
 
             if(filtered_calendar is not None):
@@ -48,19 +36,8 @@ def main():
     print("All calendars successfully scraped!")
     fo.save_df_to_file(total_traffic_df, f"results/traffic/{date_from}_to_{date_to}.csv")
 
-    total_traffic_df = do.get_traffic_df(f"results/traffic/{date_from}_to_{date_to}.csv", all_classes_df)
-    
-    if total_traffic_df is not None:
-        for date in total_traffic_df:
-            traffic_at_date = [0, 0, 0, 0, 0, 0, 0, 0]
-            traffic_at_date = do.get_traffic_at_date(all_classes_df, total_traffic_df, traffic_at_date, date, restaurants)
-            print(f"{date} -- {traffic_at_date}")
-        
-    else:
-        print("Warning - Unable to get total traffic...")
     
     driver.quit()
-
 
 
 if __name__ == '__main__':
