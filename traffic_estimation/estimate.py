@@ -1,4 +1,4 @@
-# example python traffic_estimation/estimate.py 2024-02-10 2024-02-20 "2024-02-14 09:45"
+# example bash command --> python traffic_estimation/estimate.py 2024-02-10 2024-02-20 "2024-02-14 09:45"
 import pandas as pd
 import sys
 import trafficOperations as to

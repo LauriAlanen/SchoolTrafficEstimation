@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import fileOperations as fo
 import dataOperations as do
 import websiteOperations as wo
@@ -5,14 +7,18 @@ import websiteOperations as wo
 import matplotlib.pyplot as plt
 import pandas as pd
 from alive_progress import alive_bar
-
+import datetime
 
 def main():
     url_to_scrape = 'https://lukkarit.vamk.fi/#/schedule'
     class_file_path = 'calendars/all_classes.json'
     all_classes_df = do.get_all_classes(class_file_path)
-    date_from = "2024-02-10" # YYYY-MM-DD
-    date_to = "2024-02-20" # YYYY-MM-DD
+
+    today = datetime.date.today()
+    date_from = today.strftime("%Y-%m-%d")
+    date_from_obj = datetime.datetime.strptime(date_from, "%Y-%m-%d").date()
+    date_to_obj = date_from_obj + datetime.timedelta(days=7)
+    date_to = date_to_obj.strftime("%Y-%m-%d")
     
     total_class_count = do.get_amount_of_classes(all_classes_df)
     current_class = do.get_next_class(all_classes_df)
