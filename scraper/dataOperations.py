@@ -59,8 +59,7 @@ def gather_and_filter_calendar_information(driver, sub_class, date_from, date_to
     php_session_cookie = websiteOperations.get_php_session_cookie(driver)
     calendar = calendarRequest.get_calendar_cookie(php_session_cookie, date_from, date_to)
     filtered_calendar = filter_calendar(calendar.text)
-    # Return or do something with the filtered_calendar if needed
-
+    
     return filtered_calendar
 
 
@@ -85,5 +84,6 @@ def get_amount_of_people_in_class(all_classes_df, sub_class):
         print(f"Warning - Unable to get amount of people with class name : {class_name[0]} and sub class : {sub_class}")
         return None
     
+
 def get_class_name_from_subclass(sub_class):
     return re.split(r'(\d+)',sub_class)
