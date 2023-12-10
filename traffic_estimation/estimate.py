@@ -10,7 +10,7 @@ import dataOperations as do
 import fileOperations as fo
 
 
-def main():
+def get_traffic(date_to_check):
     restaurants = {
         "Cotton Club" : 0,
         "August Restaurant" : 0,
@@ -29,7 +29,7 @@ def main():
     
     date_from = start_date.strftime("%Y-%m-%d")
     date_to = end_date.strftime("%Y-%m-%d")
-    date_to_check = sys.argv[1]
+
     
     class_file_path = 'calendars/all_classes.json'
     all_classes_df = do.get_all_classes(class_file_path)
@@ -38,11 +38,7 @@ def main():
     if total_traffic_df is not None:
         traffic_at_date = [0, 0, 0, 0, 0, 0, 0, 0]
         traffic_at_date = to.get_traffic_at_date(all_classes_df, total_traffic_df, traffic_at_date, date_to_check, restaurants)
-        print(traffic_at_date)
+        return traffic_at_date
 
     else:
         print("Warning - Unable to get total traffic...")
-
-
-if __name__ == '__main__':
-    main()
