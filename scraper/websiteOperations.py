@@ -80,7 +80,7 @@ def search_groups(driver, study_sector):
 def create_driver(url):
     options = ChromeOptions()
     options.accept_insecure_certs = True
-    options.add_argument("--headless") #enabled if you want to run without gui
+    #options.add_argument("--headless") #enabled if you want to run without gui
 
     driver = webdriver.Chrome(options=options)
     driver.get(url)

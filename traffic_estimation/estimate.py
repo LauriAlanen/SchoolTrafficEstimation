@@ -1,11 +1,14 @@
 # example bash command --> python traffic_estimation/estimate.py 2024-02-10 2024-02-20 "2024-02-14 09:45"
 import pandas as pd
 import sys
+import datetime
 import trafficOperations as to
+
 
 sys.path.append("scraper/")
 import dataOperations as do
 import fileOperations as fo
+
 
 def main():
     restaurants = {
@@ -19,9 +22,14 @@ def main():
         "Juvenes Serveri" : 0
     }
 
-    date_from = sys.argv[1]
-    date_to = sys.argv[2]
-    date_to_check = sys.argv[3]
+    current_date = datetime.date.today()
+    days_between_start_date = (current_date.weekday() - 0) % 1
+    start_date = current_date - datetime.timedelta(days=days_between_start_date)
+    end_date = start_date + datetime.timedelta(days=6)
+    
+    date_from = start_date.strftime("%Y-%m-%d")
+    date_to = end_date.strftime("%Y-%m-%d")
+    date_to_check = sys.argv[1]
     
     class_file_path = 'calendars/all_classes.json'
     all_classes_df = do.get_all_classes(class_file_path)
@@ -31,6 +39,7 @@ def main():
         traffic_at_date = [0, 0, 0, 0, 0, 0, 0, 0]
         traffic_at_date = to.get_traffic_at_date(all_classes_df, total_traffic_df, traffic_at_date, date_to_check, restaurants)
         print(traffic_at_date)
+
     else:
         print("Warning - Unable to get total traffic...")
 
