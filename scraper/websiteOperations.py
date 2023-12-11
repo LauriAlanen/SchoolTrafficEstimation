@@ -40,7 +40,6 @@ def wait_elements(driver, search_type, search_str):
             if(attempt == MAX_RETRIES - 1):
                 print(f"Warning - Tried {MAX_RETRIES} times, but still unable to locate elements")
 
-# Tässä on bugi
 def select_available_groups(driver, sub_class):
     available_groups = wait_elements(driver, By.CLASS_NAME, "search-result-row")
     
@@ -80,7 +79,7 @@ def search_groups(driver, study_sector):
 def create_driver(url):
     options = ChromeOptions()
     options.accept_insecure_certs = True
-    #options.add_argument("--headless") #enabled if you want to run without gui
+    options.add_argument("--headless") #enabled if you want to run without gui
 
     driver = webdriver.Chrome(options=options)
     driver.get(url)

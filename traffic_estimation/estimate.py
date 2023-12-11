@@ -22,19 +22,12 @@ def get_traffic(date_to_check):
         "Juvenes Serveri" : 0
     }
 
-    current_date = datetime.date.today()
-    days_between_start_date = (current_date.weekday() - 0) % 1
-    start_date = current_date - datetime.timedelta(days=days_between_start_date)
-    end_date = start_date + datetime.timedelta(days=6)
-    
-    date_from = start_date.strftime("%Y-%m-%d")
-    date_to = end_date.strftime("%Y-%m-%d")
+    date_from, date_to = fo.get_file_dates()
 
-    
     class_file_path = 'calendars/all_classes.json'
     all_classes_df = do.get_all_classes(class_file_path)
     total_traffic_df = to.get_traffic_df(f"results/traffic/{date_from}_to_{date_to}.csv", all_classes_df)
-
+    
     if total_traffic_df is not None:
         traffic_at_date = [0, 0, 0, 0, 0, 0, 0, 0]
         traffic_at_date = to.get_traffic_at_date(all_classes_df, total_traffic_df, traffic_at_date, date_to_check, restaurants)
@@ -42,3 +35,5 @@ def get_traffic(date_to_check):
 
     else:
         print("Warning - Unable to get total traffic...")
+
+get_traffic("2024-02-14 09:45")

@@ -3,7 +3,7 @@ import pyarrow.feather as feather
 import os
 import json
 from io import StringIO
-
+from datetime import datetime, timedelta
 
 def save_df_to_file(df_to_save, path):
     folder_path = os.path.dirname(path)
@@ -20,6 +20,7 @@ def read_df_from_file(path, silent):
 
         df_to_read = pd.read_csv(f)
         #read_df = feather.read_feather(f)
+        df_to_read = df_to_read.drop(df_to_read.columns[0], axis=1)
 
         return df_to_read
 
@@ -52,4 +53,9 @@ def save_dict_as_json(path, dictionary_to_save):
         f.write(json_obj)
         print("Notification - Succesfully saved dictionary!")
 
-    
+def get_file_dates():
+    date = datetime.now().date()
+    date_from = date - timedelta(days=(date.weekday() - 0) % 7)
+    date_to = date + timedelta(days=(6 - date.weekday()) % 7)
+
+    return date_from, date_to

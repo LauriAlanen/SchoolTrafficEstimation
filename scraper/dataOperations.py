@@ -84,6 +84,10 @@ def get_amount_of_people_in_class(all_classes_df, sub_class):
         print(f"Warning - Unable to get amount of people with class name : {class_name[0]} and sub class : {sub_class}")
         return None
     
+def build_dates_df(total_traffic_df):
+    dates_df = total_traffic_df.drop(['count'], axis=1)
+    return dates_df
+
 
 def get_class_name_from_subclass(sub_class):
     return re.split(r'(\d+)',sub_class)
