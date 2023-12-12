@@ -15,15 +15,17 @@ CORS(app)
 def getTraffic():
     date = request.args.get('date')
     data = est.get_traffic(date)
+    
     return jsonify(data)
 
 
 @app.route('/getDates', methods=['GET'])
 def getDates():
     date_from, date_to = fo.get_file_dates()
-    data = fo.read_df_from_file(f"results/traffic/{date_from}_to_{date_to}.csv", silent=False)
-    data = data.to_json(orient='records')
-    return jsonify(data)
+    traffic_df = fo.read_df_from_file(f"results/traffic/{date_from}_to_{date_to}.csv", silent=False)
+    traffic_df.drop(columns=["count"], inplace=True)
+
+    return jsonify(traffic_df.to_dict(orient="records"))
 
 
 if __name__ == '__main__':
