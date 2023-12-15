@@ -1,7 +1,7 @@
 # School Traffic Estimation
 
 ## Overview
-This repository contains two main programs for managing and analyzing school class schedules. The `scraper.py` script scrapes the current week's schedules from the VAMK Lukkarit website, while the `estimation.py` module estimates upcoming restaurant traffic based on class attendance. The `estimate.py` module is called from `endpoint/listener.py`, which uses the Django framework to set up a REST API.
+This repository contains two main programs for managing and analyzing school class schedules. The `scraper/main.py` script scrapes the current week's schedules from the VAMK Lukkarit website, while the `estimation.py` module estimates upcoming restaurant traffic based on class attendance. The `estimate.py` module is called from `listener.py`, which uses the Django framework to set up a REST API.
 
 
 Please note that the scraper must be run before fetching data, and currently, data is available only for the ongoing week.
@@ -9,13 +9,13 @@ Please note that the scraper must be run before fetching data, and currently, da
 ## Dependencies Installation
 1. Install the required dependencies by running the following command:
     ```bash
-    apt install -e .
+    pip install -e .
     ```
 
-## Class Schedule Scraper (`scraper.py`)
+## Class Schedule Scraper (`scraper/main.py`)
 1. Run the scraper script to gather the current week's class schedule.
     ```bash
-    ./scraper.py
+    python scraper/main.py
     ```
 2. The scraper will save individual class calendars as CSV files in the "calendars" directory.
    
