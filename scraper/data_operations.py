@@ -81,10 +81,9 @@ def build_total_traffic_df(calendar_df, total_traffic_df):
     if total_traffic_df.empty:
         return current_calendar_counts
 
-    else:
-        total_traffic_df = pd.concat([total_traffic_df, current_calendar_counts]).groupby(
-            ['end_date']).sum().reset_index()
-        return total_traffic_df
+    total_traffic_df = pd.concat([total_traffic_df, current_calendar_counts]).groupby(
+        ['end_date']).sum().reset_index()
+    return total_traffic_df
 
 
 def get_amount_of_people_in_class(all_classes_df, sub_class):

@@ -19,5 +19,5 @@ def get_calendar_cookie(php_session_id, date_from, date_to):
         "eventType": "visible"
     }
 
-    response = requests.post(url, headers=headers, json=data, verify=False)
+    response = requests.post(url, headers=headers, json=data, verify=False, timeout=10)
     return response

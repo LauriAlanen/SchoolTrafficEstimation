@@ -24,9 +24,12 @@ def wait_element(driver, search_type, search_str):
             print("Warning - Unable to locate element, retrying...")
             sleep(1)
 
-            if(attempt == MAX_RETRIES - 1):
+            if attempt == MAX_RETRIES - 1:
                 print(
                     f"Warning - Tried {MAX_RETRIES} times, but still unable to locate element")
+                return None
+
+    return None
 
 
 def wait_elements(driver, search_type, search_str):
@@ -43,10 +46,12 @@ def wait_elements(driver, search_type, search_str):
             print("Warning - Unable to locate elements, retrying...")
             sleep(1)
 
-            if(attempt == MAX_RETRIES - 1):
+            if attempt == MAX_RETRIES - 1:
                 print(
                     f"Warning - Tried {MAX_RETRIES} times, but still unable to locate elements")
+                return None
 
+    return None
 
 def select_available_groups(driver, sub_class):
     """ Selects all the classes which are available after the seach in lukkarikone."""
@@ -63,7 +68,7 @@ def select_available_groups(driver, sub_class):
             reserved_classes = wait_element(group, By.CLASS_NAME, "credits")
             total_classes = reserved_classes.text.split()[0]
 
-            if (int(total_classes) > 10):
+            if int(total_classes) > 10:
                 button = wait_element(group, By.CLASS_NAME, "btn")
                 button.click()
 
