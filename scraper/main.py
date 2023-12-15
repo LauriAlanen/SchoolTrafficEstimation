@@ -19,7 +19,7 @@ def main():
 
     total_traffic_df = pd.DataFrame(columns=['end_date'])
 
-    with alive_bar(total_class_count) as _:
+    with alive_bar(total_class_count) as bar:
         for _, class_name, sub_class in current_class:
             driver = website_controller.create_driver(url_to_scrape)
             filtered_calendar = data_operations.get_calendar(driver, sub_class, date_from, date_to)
@@ -31,7 +31,8 @@ def main():
                     f"calendars/{class_name}/{sub_class}.csv", silent=False)
                 total_traffic_df = data_operations.build_total_traffic_df(
                     calendar_df, total_traffic_df)
-
+            
+            bar()
             print("")
 
     print("All calendars successfully scraped!")
