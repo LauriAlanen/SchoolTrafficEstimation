@@ -1,9 +1,9 @@
 import pandas as pd
-import pyarrow.feather as feather
 import os
 import json
 from io import StringIO
 from datetime import datetime, timedelta
+
 
 def save_df_to_file(df_to_save, path):
     folder_path = os.path.dirname(path)
@@ -16,7 +16,8 @@ def save_df_to_file(df_to_save, path):
 
 def read_df_from_file(path, silent):
     with open(path, "rb") as f:
-        if not silent : print(f"Notification - Reading schedule {path}")
+        if not silent:
+            print(f"Notification - Reading schedule {path}")
 
         df_to_read = pd.read_csv(f)
         #read_df = feather.read_feather(f)
@@ -33,16 +34,18 @@ def create_folder_path(folder_path):
     except FileExistsError:
         print(f"Notification - Folder with path {folder_path} already exists")
 
+
 def json_to_df(calendar):
     try:
         calendar_df = pd.read_json(StringIO(calendar))
-        #print(f"\n{df}\n")
+        # print(f"\n{df}\n")
 
     except ValueError:
         print(f"Warning - Unable to convert schedule to dataframe")
         return None
-    
+
     return calendar_df
+
 
 def save_dict_as_json(path, dictionary_to_save):
     folder_path = os.path.dirname(path)
@@ -52,6 +55,7 @@ def save_dict_as_json(path, dictionary_to_save):
     with open(path, "wb") as f:
         f.write(json_obj)
         print("Notification - Succesfully saved dictionary!")
+
 
 def get_file_dates():
     date = datetime.now().date()
