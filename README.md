@@ -1,11 +1,8 @@
 # School Traffic Estimation
 
 ## Overview
-This repository contains two main programs for managing and analyzing school class schedules. The `scraper.py` script scrapes the current week's schedules from the VAMK Lukkarit website, while the `estimation.py` module estimates upcoming restaurant traffic based on class attendance. The `estimation.py` module is called from `endpoint/listener.py`, which uses the Django framework to set up a REST API.
+This repository contains two main programs for managing and analyzing school class schedules. The `scraper.py` script scrapes the current week's schedules from the VAMK Lukkarit website, while the `estimation.py` module estimates upcoming restaurant traffic based on class attendance. The `estimate.py` module is called from `endpoint/listener.py`, which uses the Django framework to set up a REST API.
 
-After starting the listener, you can easily fetch data using GET requests from the provided endpoints. For example:
-- Retrieve all dates with "attending" classes: `http://localhost:5000/getDates`
-- Get estimated traffic for a specific date and time: `http://localhost:5000/getTraffic?fdate=2023-12-13 13:15`
 
 Please note that the scraper must be run before fetching data, and currently, data is available only for the ongoing week.
 
@@ -21,11 +18,19 @@ Please note that the scraper must be run before fetching data, and currently, da
     ./scraper.py
     ```
 2. The scraper will save individual class calendars as CSV files in the "calendars" directory.
+   
+   ![image](https://github.com/LauriAlanen/SchoolTrafficEstimation/assets/80245457/4821f96f-9641-44ce-9a41-a8f547df4b15)
 
-## Traffic Estimation (`estimation.py`)
-1. After successfully scraping all classes, use the `estimation.py` program for estimating upcoming traffic.
+
+## Traffic Estimation (`estimation/estimate.py`)
+1. After successfully scraping all classes, use the `estimate.py` program for estimating upcoming traffic.
 2. The estimation is based on the number of people in each class, and each class is assigned a list with weights that affect how people are distributed to the restaurants.
 3. The program is currently tailored for estimating restaurant occupancy but is modular enough for customization.
+
+## REST API (`endpoint/listener.py`)
+After starting the listener, you can easily fetch data using GET requests from the provided endpoints. For example:
+- Retrieve all dates with "attending" classes: `http://localhost:5000/getDates`
+- Get estimated traffic for a specific date and time: `http://localhost:5000/getTraffic?fdate=2023-12-13 13:15`
 
 ## High-Level Overview
 ![High Level Overview](https://github.com/LauriAlanen/SchoolTrafficEstimation/assets/80245457/51435b5e-3c70-4c90-8811-92012ad36290)
@@ -40,6 +45,8 @@ Please note that the scraper must be run before fetching data, and currently, da
 - The code is modular and can be easily adapted for estimating other metrics or behaviors beyond restaurant occupancy.
 - Explore the code and adjust the weights and parameters in the `estimation.py` program according to your specific requirements.
 
-## Issues and Contributions
-If you encounter any issues or have suggestions for improvements, please open an issue on the [GitHub repository](https://github.com/LauriAlanen/SchoolTrafficEstimation). Contributions are welcome!
+## Issues 
+There is no handling for failed scrapes. If you get the following output the program will finish but when using the estimation program it will result in a crash.
+
+![image](https://github.com/LauriAlanen/SchoolTrafficEstimation/assets/80245457/6c403c2a-fcbd-475e-b804-d7bbadb643d8)
 ****
