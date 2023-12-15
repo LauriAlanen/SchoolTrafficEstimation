@@ -32,6 +32,9 @@ After starting the listener, you can easily fetch data using GET requests from t
 - Retrieve all dates with "attending" classes: `http://localhost:5000/getDates`
 - Get estimated traffic for a specific date and time: `http://localhost:5000/getTraffic?fdate=2023-12-13 13:15`
 
+### Demo App Made Using React and the REST API `listener.py`
+https://github.com/LauriAlanen/SchoolTrafficEstimation/assets/80245457/af37275d-85b0-4417-b35e-517963fde6dd
+
 ## High-Level Overview
 ![High Level Overview](https://github.com/LauriAlanen/SchoolTrafficEstimation/assets/80245457/51435b5e-3c70-4c90-8811-92012ad36290)
 
