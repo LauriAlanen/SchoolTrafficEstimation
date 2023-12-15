@@ -1,9 +1,8 @@
-''' This file is used to estimate the traffic at a given date. '''
+"""This module contains the main functions for fetching the traffic data."""
 
-import scraper.fileOperations as fo
-import scraper.dataOperations as do
-import estimation.traffic_operations as to
-
+from scraper import file_operations
+from scraper import data_operations
+from estimation import traffic_operations
 
 def get_traffic(date_to_check):
     """ Returns the estimated traffic at a given date."""
@@ -19,15 +18,16 @@ def get_traffic(date_to_check):
         "Juvenes Serveri": 0
     }
 
-    date_from, date_to = fo.get_file_dates()
+    date_from, date_to = file_operations.get_file_dates()
 
     class_file_path = 'calendars/all_classes.json'
-    all_classes_df = do.get_all_classes(class_file_path)
-    total_traffic_df = to.get_traffic_df(
+    all_classes_df = data_operations.get_all_classes(class_file_path)
+    total_traffic_df = traffic_operations.get_traffic_df(
         f"results/traffic/{date_from}_to_{date_to}.csv", all_classes_df)
+   
     if total_traffic_df is not None:
         traffic_at_date = [0, 0, 0, 0, 0, 0, 0, 0]
-        traffic_at_date = to.get_traffic_at_date(
+        traffic_at_date = traffic_operations.get_traffic_at_date(
             all_classes_df, total_traffic_df, traffic_at_date, date_to_check, restaurants)
         return traffic_at_date
 

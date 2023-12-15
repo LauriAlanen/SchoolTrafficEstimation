@@ -1,11 +1,14 @@
-import pandas as pd
+""" This module contains functions for saving and reading calendar data from files."""
+
 import os
 import json
 from io import StringIO
 from datetime import datetime, timedelta
+import pandas as pd
 
 
 def save_df_to_file(df_to_save, path):
+    """ Saves any type of dataframe to a file as csv."""
     folder_path = os.path.dirname(path)
     create_folder_path(folder_path)
 
@@ -15,6 +18,7 @@ def save_df_to_file(df_to_save, path):
 
 
 def read_df_from_file(path, silent):
+    """ Reads a csv file and returns a dataframe. silent is used to disable print statements."""
     with open(path, "rb") as f:
         if not silent:
             print(f"Notification - Reading schedule {path}")
@@ -27,6 +31,7 @@ def read_df_from_file(path, silent):
 
 
 def create_folder_path(folder_path):
+    """ Creates a folder with the given path if it does not exist."""
     try:
         os.makedirs(folder_path)
         print(f"Notification - Created folder with path {folder_path}")
@@ -36,9 +41,9 @@ def create_folder_path(folder_path):
 
 
 def json_to_df(calendar):
+    """ Converts a json string to a dataframe."""
     try:
         calendar_df = pd.read_json(StringIO(calendar))
-        # print(f"\n{df}\n")
 
     except ValueError:
         print(f"Warning - Unable to convert schedule to dataframe")
@@ -58,6 +63,7 @@ def save_dict_as_json(path, dictionary_to_save):
 
 
 def get_file_dates():
+    """ Returns the date from and date to for the current week. Used for automatically naming and reading files."""
     date = datetime.now().date()
     date_from = date - timedelta(days=(date.weekday() - 0) % 7)
     date_to = date + timedelta(days=(6 - date.weekday()) % 7)

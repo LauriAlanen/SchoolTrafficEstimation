@@ -1,3 +1,4 @@
+""" Module for handling the actions required to scrape the calendar data from lukkarit.vamk.fi"""
 from time import sleep
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -11,6 +12,7 @@ WAIT_TIMEOUT = 3
 
 
 def wait_element(driver, search_type, search_str):
+    """ General function for waiting for an element to appear on the page."""
     for attempt in range(MAX_RETRIES):
         try:
             element = WebDriverWait(driver, WAIT_TIMEOUT).until(
@@ -28,6 +30,7 @@ def wait_element(driver, search_type, search_str):
 
 
 def wait_elements(driver, search_type, search_str):
+    """ General function for waiting for multiple elements to appear on the page."""
     for attempt in range(MAX_RETRIES):
         try:
             elements = WebDriverWait(driver, WAIT_TIMEOUT).until(
@@ -46,6 +49,7 @@ def wait_elements(driver, search_type, search_str):
 
 
 def select_available_groups(driver, sub_class):
+    """ Selects all the classes which are available after the seach in lukkarikone."""
     available_groups = wait_elements(
         driver, By.CLASS_NAME, "search-result-row")
 
@@ -56,7 +60,6 @@ def select_available_groups(driver, sub_class):
 
     for group in available_groups:
         try:
-            #group_name = wait_element(group, By.CLASS_NAME, "code")
             reserved_classes = wait_element(group, By.CLASS_NAME, "credits")
             total_classes = reserved_classes.text.split()[0]
 
@@ -73,6 +76,7 @@ def select_available_groups(driver, sub_class):
 
 
 def search_groups(driver, study_sector):
+    """ Searches for all the classes in the given study sector."""
     try:
         form = wait_element(driver, By.CLASS_NAME, "form-control")
         form.send_keys(study_sector)
@@ -83,10 +87,10 @@ def search_groups(driver, study_sector):
 
     except TimeoutException:
         print("Warning - Cant locate elements")
-        exit(TimeoutException)
 
 
 def create_driver(url):
+    """ Creates the driver for Chrome."""
     options = ChromeOptions()
     options.accept_insecure_certs = True
     # enabled if you want to run without gui
@@ -99,5 +103,6 @@ def create_driver(url):
 
 
 def get_php_session_cookie(driver):
+    """ Gets the PHP session cookie from the browser. Which is used to get the calendar data from the API."""
     cookies = driver.get_cookies()
     return cookies[0]["value"]
