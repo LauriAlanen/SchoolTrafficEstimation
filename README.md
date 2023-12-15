@@ -1,7 +1,13 @@
-# Class Traffic Estimation
+# School Traffic Estimation
 
 ## Overview
-This repository includes two main programs for managing and analyzing school class schedules. The `scraper.py` script is responsible for scraping the current week's class schedule from the VAMK Lukkarit website. After successfully scraping the classes, the `estimation.py` program can be used to estimate upcoming traffic in restaurants based on the number of people in classes.
+This repository contains two main programs for managing and analyzing school class schedules. The `scraper.py` script scrapes the current week's schedules from the VAMK Lukkarit website, while the `estimation.py` module estimates upcoming restaurant traffic based on class attendance. The `estimation.py` module is called from `endpoint/listener.py`, which uses the Django framework to set up a REST API.
+
+After starting the listener, you can easily fetch data using GET requests from the provided endpoints. For example:
+- Retrieve all dates with "attending" classes: `http://localhost:5000/getDates`
+- Get estimated traffic for a specific date and time: `http://localhost:5000/getTraffic?fdate=2023-12-13 13:15`
+
+Please note that the scraper must be run before fetching data, and currently, data is available only for the ongoing week.
 
 ## Dependencies Installation
 1. Install the required dependencies by running the following command:
@@ -35,4 +41,5 @@ This repository includes two main programs for managing and analyzing school cla
 - Explore the code and adjust the weights and parameters in the `estimation.py` program according to your specific requirements.
 
 ## Issues and Contributions
-If you encounter any issues or have suggestions for improvements, please open an issue on the GitHub repository. Contributions are welcome!
+If you encounter any issues or have suggestions for improvements, please open an issue on the [GitHub repository](https://github.com/LauriAlanen/SchoolTrafficEstimation). Contributions are welcome!
+****
