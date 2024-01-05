@@ -1,10 +1,11 @@
 # School Traffic Estimation
 
 ## Overview
-This repository contains two main programs for managing and analyzing school class schedules. The `scraper/main.py` script scrapes the current week's schedules from the VAMK Lukkarit website, while the `estimation.py` module estimates upcoming restaurant traffic based on class attendance. The `estimate.py` module is called from `listener.py`, which uses the Django framework to set up a REST API.
+This repository contains two main programs for managing and analyzing school class schedules. The `scraper/main.py` script scrapes the current week's schedules from the VAMK Lukkarit website, while the `estimation` module estimates upcoming restaurant traffic based on class attendance. The `estimation/estimate.py` script is called from `endpoint/listener.py`, which uses the Django framework to set up a API.
 
 
-Please note that the scraper must be run before fetching data, and currently, data is available only for the ongoing week.
+- Please note that the scraper must be run before fetching data, and currently, data is available only for the ongoing week. 
+- To automate the scraping make a crontab that runs the `scraper/main.py` at monday 00:00.
 
 ## Dependencies Installation
 1. Install the required dependencies by running the following command:
@@ -27,12 +28,12 @@ Please note that the scraper must be run before fetching data, and currently, da
 2. The estimation is based on the number of people in each class, and each class is assigned a list with weights that affect how people are distributed to the restaurants.
 3. The program is currently tailored for estimating restaurant occupancy but is modular enough for customization.
 
-## REST API (`endpoint/request.py`)
+##  API (`endpoint/request.py`)
 After starting the listener, you can easily fetch data using GET requests from the provided endpoints. For example:
 - Retrieve all dates with "attending" classes: `http://localhost:5000/getDates`
 - Get estimated traffic for a specific date and time: `http://localhost:5000/getTraffic?fdate=2023-12-13 13:15`
 
-### Demo App Made Using React and the REST API `listener.py`
+### Demo App Made Using React and the API `endpoint/listener.py`
 https://github.com/LauriAlanen/SchoolTrafficEstimation/assets/80245457/af37275d-85b0-4417-b35e-517963fde6dd
 
 ## High-Level Overview
